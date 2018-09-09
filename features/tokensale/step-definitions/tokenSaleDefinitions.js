@@ -6,8 +6,11 @@ const https = require("https");
 const fs = require("fs");
 const download = require("download-file");
 const md5File = require("md5-file");
+const delay = require("delay");
 
 const logger = logging.getLogger();
+
+const pathToChromeDownloads = "./chromeDownloads";
 
 module.exports = function() {
     this.Given(/^I go to the website "([^"]*)"$/, url => {
@@ -37,32 +40,37 @@ module.exports = function() {
         browser.click("." + buttonClass);
     });
 
-    this.Then(/^I download the "([^"]*)" whitepaper and expect the md5 to be "([^"]*)"$/, (wpText, md5) => {
+    this.Then(/^I download the "([^"]*)" whitepaper$/, async wpText => {
         logger.debug(`wpText is ${wpText}`);
         let boxLink = browser.getAttribute("=" + wpText, "href");
         logger.debug(JSON.stringify(boxLink, null, 2));
         browser.url(boxLink);
 
-        const pathToChromeDownloads = "./chromeDownloads";
         fsExtra.removeSync(pathToChromeDownloads);
         fsExtra.mkdirsSync(pathToChromeDownloads);
 
         let fileName = `${wpText}.pdf`;
-        logger.debug(`File to be saved at: ${fileName}`);
+        logger.debug(`File to be saved at: ${pathToChromeDownloads}/${fileName}`);
 
         var options = {
             directory: pathToChromeDownloads,
             filename: fileName
         };
 
+        let fileDownloaded = false;
         download(boxLink, options, function(err) {
-            let hash = "";
             if (err) logger.error(`Error on file download: ${err}`);
+            fileDownloaded = true;
             logger.info("File downloaded!");
-            hash = md5File.sync(`${pathToChromeDownloads}/${fileName}`);
-            logger.info(`The MD5 sum of ${fileName}: ${hash}`);
-            expect(hash).to.be.eql(md5);
         });
+        await delay(3000); // nasty but works for now
+        expect(fileDownloaded).to.be.true;
+    });
+
+    this.Then(/^I expect the md5 of the pdf "([^"]*)" to be "([^"]*)"$/, (fileName, md5) => {
+        hash = md5File.sync(`${pathToChromeDownloads}/${fileName}`);
+        logger.info(`The MD5 sum of ${fileName}: ${hash}`);
+        expect(hash).to.be.eql(md5);
     });
 
     this.Then(/^I follow the link "([^"]*)"$/, linkName => {
@@ -80,10 +88,10 @@ module.exports = function() {
     this.Then(/^I switch to the tab number (\d+)$/, tabNum => {
         var tabIds = browser.getTabIds();
         for (id of tabIds) {
-            logger.info(id + " ---> " + browser.getUrl());
+            logger.debug(id + " ---> " + browser.getUrl());
         }
         let newTab = tabIds[tabNum - 1];
-        logger.info(`Switching to tab num ${tabNum} (${newTab})`);
+        logger.debug(`Switching to tab num ${tabNum} (${newTab})`);
         browser.switchTab(newTab);
     });
 

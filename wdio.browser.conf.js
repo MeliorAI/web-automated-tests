@@ -12,8 +12,8 @@ exports.config = merge(wdioConf.config, {
             chromeOptions: {
                 args: ["--window-size=1280,800", "user-data-dir=./chrome/user-data"],
                 prefs: {
-                    "download.default_directory": pathToDownload,
-                    "profile.default_content_setting_values.automatic_downloads": 2
+                    "download.default_directory": pathToDownload
+                    // "profile.default_content_setting_values.automatic_downloads": 2
                 }
             }
         }

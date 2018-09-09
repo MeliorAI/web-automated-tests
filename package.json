@@ -20,6 +20,7 @@
     "wdio-spec-reporter": "~0.1.0"
   },
   "dependencies": {
+    "delay": "^4.0.0",
     "download-file": "^0.1.5",
     "js-logging": "^0.1.0",
     "md5-file": "^4.0.0"
