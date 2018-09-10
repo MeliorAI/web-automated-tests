@@ -24,17 +24,20 @@ npm install
 ```
 
 ### Run tests in headless mode
+
+NOTE: In headless mode checking the title of the site might fail.
+
 ```
-npm test
+npm run-script test
 ```
 
 ### Run tests in browser
+
+Currently running on Chrome. Firefox and others should also be tested
+if tests can be browser dependent.
+
 ```
-npm test-browser
-```
-or
-```
-./node_modules/.bin/gulp browser-test
+npm run-script browser-test
 ```
 
 ### Test details

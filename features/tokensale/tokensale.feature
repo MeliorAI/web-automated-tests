@@ -34,7 +34,7 @@ Scenario: Check the link to MINNIE's description
 Scenario: Check the download links for the whitepaper
     Given I go to the website "https://tokensale.melior.ai"
     When I download the "Full Whitepaper" whitepaper
-    Then I expect the md5 of the pdf "Full Whitepaper.pdf" to be "c3abd154a4a2dcf1204d8f7b0bfdbee4"
+    Then I expect the md5 of the pdf "Full Whitepaper.pdf" to be "eb00f02d937726a1e606e7bd0942b8ea"
 
 Scenario: Check the download links for the technical summary
     Given I go to the website "https://tokensale.melior.ai"
